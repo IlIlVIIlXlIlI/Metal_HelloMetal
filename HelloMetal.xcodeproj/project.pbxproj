@@ -24,6 +24,8 @@
 		C4B7F05625D81E7800039313 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C4B7F05D25D81EE700039313 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		C4B7F06025D81FFA00039313 /* MetalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalView.swift; sourceTree = "<group>"; };
+		C4B7F06325D8347C00039313 /* ShaderTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderTypes.h; sourceTree = "<group>"; };
+		C4B7F06425D834C400039313 /* Hello<etal-Bridginf-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Hello<etal-Bridginf-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +65,8 @@
 				C4B7F05325D81E7800039313 /* Preview Content */,
 				C4B7F05D25D81EE700039313 /* Renderer.swift */,
 				C4B7F06025D81FFA00039313 /* MetalView.swift */,
+				C4B7F06325D8347C00039313 /* ShaderTypes.h */,
+				C4B7F06425D834C400039313 /* Hello<etal-Bridginf-Header.h */,
 			);
 			path = HelloMetal;
 			sourceTree = "<group>";
@@ -287,6 +291,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = shogo.HelloMetal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/HelloMetal/HelloMetal-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -309,6 +314,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = shogo.HelloMetal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/HelloMetal/HelloMetal-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
