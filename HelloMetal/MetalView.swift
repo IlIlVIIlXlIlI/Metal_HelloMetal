@@ -21,7 +21,7 @@ struct MetalView:UIViewRepresentable {
         view.clearColor = MTLClearColor(red: 0.0, green: 1.0, blue: 1.0, alpha: 1.0)
         
         if let device = view.device {
-            context.coordinator.setup(device: device)
+            context.coordinator.setup(device: device, view: view)
         }
         
         return view
