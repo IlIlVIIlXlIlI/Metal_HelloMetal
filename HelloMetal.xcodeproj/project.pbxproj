@@ -13,6 +13,7 @@
 		C4B7F05525D81E7800039313 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C4B7F05425D81E7800039313 /* Preview Assets.xcassets */; };
 		C4B7F05E25D81EE700039313 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4B7F05D25D81EE700039313 /* Renderer.swift */; };
 		C4B7F06125D81FFA00039313 /* MetalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4B7F06025D81FFA00039313 /* MetalView.swift */; };
+		C4B7F06725D83A6D00039313 /* Shader.metal in Sources */ = {isa = PBXBuildFile; fileRef = C4B7F06625D83A6D00039313 /* Shader.metal */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,7 +26,8 @@
 		C4B7F05D25D81EE700039313 /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		C4B7F06025D81FFA00039313 /* MetalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalView.swift; sourceTree = "<group>"; };
 		C4B7F06325D8347C00039313 /* ShaderTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderTypes.h; sourceTree = "<group>"; };
-		C4B7F06425D834C400039313 /* Hello<etal-Bridginf-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Hello<etal-Bridginf-Header.h"; sourceTree = "<group>"; };
+		C4B7F06625D83A6D00039313 /* Shader.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shader.metal; sourceTree = "<group>"; };
+		C4B7F06D25D83EE400039313 /* HelloMetal-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HelloMetal-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +61,7 @@
 			isa = PBXGroup;
 			children = (
 				C4B7F04D25D81E7700039313 /* HelloMetalApp.swift */,
+				C4B7F06625D83A6D00039313 /* Shader.metal */,
 				C4B7F04F25D81E7700039313 /* ContentView.swift */,
 				C4B7F05125D81E7800039313 /* Assets.xcassets */,
 				C4B7F05625D81E7800039313 /* Info.plist */,
@@ -66,7 +69,7 @@
 				C4B7F05D25D81EE700039313 /* Renderer.swift */,
 				C4B7F06025D81FFA00039313 /* MetalView.swift */,
 				C4B7F06325D8347C00039313 /* ShaderTypes.h */,
-				C4B7F06425D834C400039313 /* Hello<etal-Bridginf-Header.h */,
+				C4B7F06D25D83EE400039313 /* HelloMetal-Bridging-Header.h */,
 			);
 			path = HelloMetal;
 			sourceTree = "<group>";
@@ -151,6 +154,7 @@
 				C4B7F06125D81FFA00039313 /* MetalView.swift in Sources */,
 				C4B7F05025D81E7700039313 /* ContentView.swift in Sources */,
 				C4B7F05E25D81EE700039313 /* Renderer.swift in Sources */,
+				C4B7F06725D83A6D00039313 /* Shader.metal in Sources */,
 				C4B7F04E25D81E7700039313 /* HelloMetalApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

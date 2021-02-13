@@ -57,7 +57,7 @@ class Renderer: NSObject, MTKViewDelegate {
             encorder.setRenderPipelineState(pipeline)
             
             // Vertex関数に渡す引数を設定する
-            endorder.setVertexBytes(self.vertices,
+            encorder.setVertexBytes(self.vertices,
                                     length: MemoryLayout<ShaderVertex>.size * self.vertices.count,
                                     index: kShaderVertexInputIndexVertices)
             

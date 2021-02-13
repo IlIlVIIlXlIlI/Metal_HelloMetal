@@ -12,8 +12,8 @@
 
 enum {
     kShaderVertexInputIndexVertices     = 0,
-    kShaderVertexInputIndexViewportSize = 1,
-}
+    kShaderVertexInputIndexViewportSize = 1
+};
 
 typedef struct {
     vector_float2 position;
