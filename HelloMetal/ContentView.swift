@@ -1,15 +1,21 @@
-//
-//  ContentView.swift
-//  HelloMetal
-//
-//  Created by Shogo Nobuhara on 2021/02/13.
-//
-
 import SwiftUI
 
 struct ContentView: View {
+    @State var isRunningCapture: Bool = false
+    
     var body: some View {
-        MetalView()
+        VStack {
+            MetalView(isRunningCapture: $isRunningCapture)
+            Button(action: {
+                self.isRunningCapture = !self.isRunningCapture
+            }) {
+                if self.isRunningCapture {
+                    Text("Stop Capture")
+                } else {
+                    Text("Start Capture")
+                }
+            }
+        }
     }
 }
 

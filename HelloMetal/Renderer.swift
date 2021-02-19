@@ -16,6 +16,8 @@ class Renderer: NSObject, MTKViewDelegate {
     var viewportSize: CGSize = CGSize()
     var vertices: [ShaderVertex] = [ShaderVertex]()
     var startDate: Date? = nil
+    var isRunningCapture: Bool = false
+    
     
     // イニシャライザを追加する
     init(_ parent: MetalView) {
@@ -123,6 +125,32 @@ class Renderer: NSObject, MTKViewDelegate {
             print(error)
         }
         
+    }
+    
+    // GPU フレームキャプチャを開始する
+    func startFrameCapture(device:MTLDevice) {
+        if self.isRunningCapture {
+            return
+        }
+        
+        let desc = MTLCaptureDescriptor()
+        desc.captureObject = device
+        
+        do {
+            let manager = MTLCaptureManager.shared()
+            try manager.startCapture(with: desc)
+            self.isRunningCapture = true
+        } catch {
+            
+        }
+    }
+    
+    // GPUフレームキャプチャを停止する
+    func stopFrameCapture() {
+        if self.isRunningCapture {
+            MTLCaptureManager.shared().stopCapture()
+            self.isRunningCapture = false
+        }
     }
     
     
