@@ -15,9 +15,14 @@ enum {
     kShaderVertexInputIndexViewportSize = 1
 };
 
+enum {
+    kFragmentInputIndexTexture = 0
+};
+
 typedef struct {
     vector_float2 position;
     vector_float4 color;
+    vector_float2 textureCoordinate;
 } ShaderVertex;
 
 #endif /* ShaderTypes_h */
