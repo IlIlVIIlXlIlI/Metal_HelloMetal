@@ -15,6 +15,7 @@ class Renderer: NSObject, MTKViewDelegate {
     var pipelineState: MTLRenderPipelineState?
     var viewportSize: CGSize = CGSize()
     var vertices: [ShaderVertex] = [ShaderVertex]()
+    
     // イニシャライザを追加する
     init(_ parent: MetalView) {
         self.parent = parent
@@ -22,15 +23,30 @@ class Renderer: NSObject, MTKViewDelegate {
     
     
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
-        self.viewportSize = size
         
+        self.viewportSize = size
         let wh = Float(min(size.width,size.height))
-        self.vertices = [ShaderVertex(position: vector_float2(0.0, wh / 4.0),
-                                      color:vector_float4(1.0,0.0,0.0,1.0)),
-                         ShaderVertex(position: vector_float2(-wh / 4.0, -wh / 4.0),
-                                      color:vector_float4(0.0,1.0,0.0,1.0)),
-                         ShaderVertex(position: vector_float2(wh / 4.0, -wh / 4.0),
-                                      color:vector_float4(0.0,0.0,1.0,1.0))]
+        
+        // 四角形の頂点の座標を計算する
+        self.vertices = [
+            // 三角形( 1 )
+            ShaderVertex(position: vector_float2(-wh / 2.0, wh / 2.0),
+                         color: vector_float4(1.0,1.0,1.0,1.0)),
+            ShaderVertex(position: vector_float2(-wh / 2.0, -wh / 2.0),
+                         color: vector_float4(1.0,1.0,1.0,1.0)),
+            ShaderVertex(position: vector_float2(wh / 2.0, -wh / 2.0),
+                         color: vector_float4(1.0,1.0,1.0,1.0)),
+            
+            // 三角形( 2 )
+            ShaderVertex(position: vector_float2(wh / 2.0, -wh / 2.0),
+                         color: vector_float4(1.0,1.0,1.0,1.0)),
+            ShaderVertex(position: vector_float2(-wh / 2.0, wh / 2.0),
+                         color: vector_float4(1.0,1.0,1.0,1.0)),
+            ShaderVertex(position: vector_float2(wh / 2.0, wh / 2.0),
+                         color: vector_float4(1.0,1.0,1.0,1.0)),
+            
+        ]
+        
     }
     
     func draw(in view: MTKView)
@@ -68,7 +84,7 @@ class Renderer: NSObject, MTKViewDelegate {
                                     index: kShaderVertexInputIndexViewportSize)
             
             // 三角形を描画する
-            encorder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 3)
+            encorder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: 6)
             
         }
         
@@ -107,6 +123,79 @@ class Renderer: NSObject, MTKViewDelegate {
             print(error)
         }
         
+    }
+    
+    
+    func makeTexture(device: MTLDevice?)->MTLTexture? {
+          
+        // アセットカタログから画像を読み込む
+        guard let image = UIImage(named: "TextureImage") else {
+            return nil
+        }
+        
+        // CGImageを取得する
+        guard let cgImage = image.cgImage else {
+            return nil
+        }
+        
+        // データプロバイダ経由でピクセルデータを取得する
+        guard let pixelData = cgImage.dataProvider?.data else {
+            return nil
+        }
+        
+        guard let srcBits = CFDataGetBytePtr(pixelData) else {
+            return nil
+        }
+        
+        // テクスチャを作成する
+        let desc = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: .rgba8Unorm,
+                                                            width: cgImage.width,
+                                                            height: cgImage.height,
+                                                            mipmapped: false)
+        let texture = device?.makeTexture(descriptor: desc)
+        
+        // RGBA形式のピクセルデータを作る
+        let bytesPerRow = cgImage.width * 4
+        var dstBits = Data(count: bytesPerRow * cgImage.height)
+        let alphaInfo = cgImage.alphaInfo
+        
+        let rPos = (alphaInfo == .first || alphaInfo == .noneSkipFirst) ? 1 : 0
+        let gPos = rPos + 1
+        let bPos = gPos + 1
+        let aPos = (alphaInfo == .last || alphaInfo == .noneSkipLast) ? 3 : 0
+        
+        for y in 0 ..< cgImage.height {
+            for x in 0 ..< cgImage.width {
+                let srcOff = y * cgImage.bytesPerRow + x * cgImage.bitsPerPixel / 8
+                let dstOff = y * bytesPerRow + x * 4
+                
+                dstBits[dstOff] = srcBits[srcOff + rPos]
+                dstBits[dstOff + 1] = srcBits[srcOff + gPos]
+                dstBits[dstOff + 2] = srcBits[srcOff + bPos]
+                
+                if alphaInfo != .none {
+                    dstBits[dstOff + 3] = srcBits[srcOff + aPos]
+                }
+            }
+        }
+        
+        // テクスチャのピクセルデータを置き換える
+        dstBits.withUnsafeBytes { (bufPtr) in
+            if let baseAddress = bufPtr.baseAddress {
+                let region = MTLRegion(origin: MTLOrigin(x: 0, y: 0, z: 0),
+                                       size: MTLSize(width: cgImage.width,
+                                                     height: cgImage.height,
+                                                     depth: 1))
+                
+                texture?.replace(region: region,
+                                 mipmapLevel: 0,
+                                 withBytes: baseAddress,
+                                 bytesPerRow: bytesPerRow)
+            }
+        }
+        
+        
+        return nil
     }
     
     
