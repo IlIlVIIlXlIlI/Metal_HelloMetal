@@ -12,7 +12,8 @@
 
 enum {
     kShaderVertexInputIndexVertices     = 0,
-    kShaderVertexInputIndexViewportSize = 1
+    kShaderVertexInputIndexViewportSize = 1,
+    kShaderVertexInputIndexPastTime     = 2
 };
 
 typedef struct {

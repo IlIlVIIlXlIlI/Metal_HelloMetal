@@ -15,6 +15,8 @@ class Renderer: NSObject, MTKViewDelegate {
     var pipelineState: MTLRenderPipelineState?
     var viewportSize: CGSize = CGSize()
     var vertices: [ShaderVertex] = [ShaderVertex]()
+    var startDate: Date? = nil
+    
     // イニシャライザを追加する
     init(_ parent: MetalView) {
         self.parent = parent
@@ -47,6 +49,16 @@ class Renderer: NSObject, MTKViewDelegate {
             return
         }
         
+        // 最初のフレームを表示してからの経過時間を取得する
+        var pastTime: Float = 0.0
+        if let date = self.startDate {
+            pastTime = Float(-date.timeIntervalSinceNow)
+        } else {
+            self.startDate = Date()
+        }
+        
+        
+        
         encorder.setViewport(MTLViewport(originX: 0, originY: 0,
                                          width: Double(self.viewportSize.width),
                                          height: Double(self.viewportSize.height),
@@ -66,6 +78,10 @@ class Renderer: NSObject, MTKViewDelegate {
             encorder.setVertexBytes(&vpSize,
                                     length: MemoryLayout<vector_float2>.size,
                                     index: kShaderVertexInputIndexViewportSize)
+            encorder.setVertexBytes(&pastTime,
+                                    length: MemoryLayout<Float>.size,
+                                    index: kShaderVertexInputIndexPastTime)
+            
             
             // 三角形を描画する
             encorder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 3)
