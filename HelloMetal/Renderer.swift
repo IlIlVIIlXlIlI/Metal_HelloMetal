@@ -15,6 +15,10 @@ class Renderer: NSObject, MTKViewDelegate {
     var viewportSize: CGSize = CGSize()
     var vertices: [ShaderVertex] = [ShaderVertex]()
     var texture: MTLTexture?
+    var originalTexture: MTLTexture?
+    var device: MTLDevice?
+    var filterContext: CIContext?
+    var isFiltered: Bool = false
 
     init(_ parent: MetalView) {
         self.parent = parent
@@ -24,6 +28,10 @@ class Renderer: NSObject, MTKViewDelegate {
         self.commandQueue = device.makeCommandQueue()
         setupPipelineState(device: device, view: view)
         self.texture = makeTexture(device: device)
+
+        self.originalTexture = self.texture
+        self.device = device
+        self.filterContext = CIContext(mtlDevice: device)
     }
 
     func setupPipelineState(device: MTLDevice, view: MTKView) {
@@ -207,5 +215,53 @@ class Renderer: NSObject, MTKViewDelegate {
         }
 
         return texture
+    }
+
+    // テクスチャをリセットする
+    func resetTexture() {
+        self.texture = self.originalTexture
+        self.isFiltered = false
+    }
+    
+    // テクスチャをセピア調に変える
+    func applySepia() {
+        // 入力画像の設定
+        guard let originalTexture = self.originalTexture else {
+            return
+        }
+        guard let srcImage =
+            CIImage(mtlTexture: originalTexture, options: nil) else {
+            return
+        }
+        
+        // フィルタ情報を設定する
+        let filter = CIFilter(name: "CISepiaTone")
+        filter?.setValue(srcImage, forKey: kCIInputImageKey)
+        filter?.setValue(1.0, forKey: kCIInputIntensityKey)
+        
+        // 適用された画像取得
+        guard let dstImage = filter?.outputImage else {
+            return
+        }
+        
+        // テクスチャを作る
+        let width = originalTexture.width
+        let height = originalTexture.height
+        let desc = MTLTextureDescriptor.texture2DDescriptor(
+            pixelFormat: .rgba8Unorm, width: width, height: height,
+            mipmapped: false)
+        desc.usage = [.shaderRead, .shaderWrite]
+        
+        let dstTexture = self.device?.makeTexture(descriptor: desc)
+        
+        if dstTexture != nil {
+            // テクスチャにレンダリングする
+            let bounds = CGRect(x: 0, y: 0, width: width, height: height)
+            self.filterContext?.render(
+                dstImage, to: dstTexture!, commandBuffer: nil,
+                bounds: bounds, colorSpace: CGColorSpaceCreateDeviceRGB())
+            self.texture = dstTexture
+            self.isFiltered = true
+        }
     }
 }

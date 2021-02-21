@@ -8,8 +8,29 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State var filter: MetalView.Filter = .original
+    
     var body: some View {
-        MetalView()
+        VStack {
+            MetalView(filter: $filter)
+            HStack {
+                Button(action: {
+                    self.filter = .sepia
+                }, label: {
+                    Text("Sepia")
+                        .padding()
+                })
+                
+                Button(action: {
+                    self.filter = .original
+                }, label: {
+                    Text("Reset")
+                        .padding()
+                })
+                
+            }
+        }
+        
     }
 }
 

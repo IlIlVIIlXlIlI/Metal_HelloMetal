@@ -13,6 +13,13 @@ struct MetalView:UIViewRepresentable {
     //MTKViewを表示する
     typealias UIViewType = MTKView
     
+    enum Filter {
+        case original
+        case sepia
+    }
+    
+    @Binding var filter: Filter
+    
     func makeUIView(context: Context) -> MTKView {
         let view = MTKView()
         view.device = MTLCreateSystemDefaultDevice()
@@ -30,7 +37,12 @@ struct MetalView:UIViewRepresentable {
     
     // ビューの更新処理
     func updateUIView(_ uiView: MTKView, context: Context) {
-        
+        let renderer = context.coordinator
+        if self.filter == .original && renderer.isFiltered {
+            renderer.resetTexture()
+        } else if self.filter == .sepia && !renderer.isFiltered {
+            renderer.applySepia()
+        }
     }
     
     // コーディネーターを作る
@@ -42,6 +54,6 @@ struct MetalView:UIViewRepresentable {
 
 struct MetalView_Previews: PreviewProvider {
     static var previews: some View {
-        MetalView()
+        MetalView(filter: .constant(.original))
     }
 }
