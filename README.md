@@ -1,3 +1,3 @@
 # Metal_HelloMetal
 
-Metalの初期化のテンプレート
+テクスチャマッピングを行った。
