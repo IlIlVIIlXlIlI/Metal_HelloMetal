@@ -1,3 +1,5 @@
 # Metal_HelloMetal
 
-Metalの初期化のテンプレート
+Core Imageの画像処理フィルタ
+
+フィルタを適用して、セピア調にするようにしてみた。
